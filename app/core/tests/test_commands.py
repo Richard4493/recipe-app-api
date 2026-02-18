@@ -28,12 +28,14 @@ class CommandTests(SimpleTestCase):
 
     def test_wait_for_db_ready(self, patched_check):
         """
-        Test that the command completes successfully when the database is ready.
-        
+        Test that the command completes successfully when the
+        database is ready.
+
         patched_check is the mocked version of Command.check method.
         """
 
-        # Simulate database being ready by making check() return True immediately
+        # Simulate database being ready by making check() return
+        # True immediately
         patched_check.return_value = True
 
         # Call the custom management command: python manage.py wait_for_db
@@ -43,27 +45,32 @@ class CommandTests(SimpleTestCase):
         # Verify that the check() method was called exactly once
         # and with the correct argument (default database)
         patched_check.assert_called_once_with(databases=['default'])
-    
-    # Patch the time.sleep function so it doesn't actually delay the test execution
+
+    # Patch the time.sleep function so it doesn't actually delay the
+    # test execution
     # This makes the test run instantly instead of waiting in real time
     @patch('time.sleep')
-
     def test_wait_for_db_delay(self, patched_sleep, patched_check):
         """
         Test waiting for database when OperationalError occurs.
 
         This test simulates database connection failures multiple times,
-        and verifies that the wait_for_db command retries until the database is ready.
+        and verifies that the wait_for_db command retries until the
+        database is ready.
         """
 
         # Simulate database connection behavior using side_effect:
-        #
         # First 2 calls → raise Psycopg2OpError (PostgreSQL connection error)
         # Next 3 calls → raise Django OperationalError (database not ready)
         # Final call → return True (database is ready)
         #
         # This simulates database becoming ready after multiple retries.
-        patched_check.side_effect = [Psycopg2OpError] * 2 + [OperationalError] * 3 + [True]   #list multiplication and concatination
+        patched_check.side_effect = (
+                [Psycopg2OpError] * 2
+                + [OperationalError] * 3
+                + [True]
+            )
+        # list multiplication and concatination
 
         # Run the custom management command: python manage.py wait_for_db
         #
