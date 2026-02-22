@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
-    'user'
+    'user',
+    'recipe',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +89,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASS'),
+        'CONN_MAX_AGE': 0,
     }
 }
 
