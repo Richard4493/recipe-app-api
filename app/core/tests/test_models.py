@@ -2,6 +2,7 @@
 Tests for models.
 """
 from decimal import Decimal
+from os import name
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from core import models
@@ -79,5 +80,10 @@ class ModelTests(TestCase):
 
         self.assertEqual(str(tag), tag.name)
 
-    def test_create_tag_on_update(self):
-        """Test creating a tag on recipe update is successful."""
+    def test_create_ingredient(self):
+        """Test creating an ingredient is successful."""
+
+        user = create_user()
+        ingredient = models.Ingredient.objects.create(user=user,name="Rice")
+
+        self.assertAlmostEqual(str(ingredient),ingredient.name)
