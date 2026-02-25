@@ -28,26 +28,26 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                             #creating a recipe, Django does NOT automatically assign user=self.request.user.
           serializer.save(user = self.request.user)
 
-class TagViewSet(mixins.ListModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,mixins.CreateModelMixin,viewsets.GenericViewSet,):
-        """Manage tags in the database."""
-        serializer_class = TagSerializer
-        queryset = Tag.objects.all()
-        authentication_classes = [TokenAuthentication]
-        permission_classes = [IsAuthenticated]
+class BaseRecipeAttrViewSet(mixins.ListModelMixin,mixins.UpdateModelMixin,mixins.DestroyModelMixin,mixins.CreateModelMixin,viewsets.GenericViewSet):
+     """A Baseclass for tags and ingredients views so that redundant code can be avoided"""
 
-        def get_queryset(self):
-             return self.queryset.filter(user=self.request.user).order_by('-name')
-        
-class IngredientViewSet(mixins.ListModelMixin,mixins.UpdateModelMixin ,mixins.DestroyModelMixin , viewsets.GenericViewSet):
-     """Manage Ingredients in the db"""
-
-     serializer_class = IngredientSerializer
-     queryset = Ingredient.objects.all()
      authentication_classes = [TokenAuthentication]
      permission_classes = [IsAuthenticated]
 
      def get_queryset(self):
-         return self.queryset.filter(user = self.request.user).order_by('-name')
+             return self.queryset.filter(user=self.request.user).order_by('-name')
+
+
+class TagViewSet(BaseRecipeAttrViewSet):
+        """Manage tags in the database."""
+        serializer_class = TagSerializer
+        queryset = Tag.objects.all()
+
+class IngredientViewSet(BaseRecipeAttrViewSet):
+     """Manage Ingredients in the db"""
+
+     serializer_class = IngredientSerializer
+     queryset = Ingredient.objects.all()
      
         
           
